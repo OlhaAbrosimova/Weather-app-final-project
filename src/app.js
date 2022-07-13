@@ -171,7 +171,7 @@ function retrievePosition(position) {
 	let units = "metric";
 	let apiUrl = `${apiEndPoint}?lat=${latitude}&lon=${longitude}&appid=${apiKey}&units=${units}`;
 
-	axios.get(apiKey).then(handleSubmit);
+	// axios.get(apiKey).then(handleSubmit);
 	axios.get(apiUrl).then(displayTemperature);
 }
 
