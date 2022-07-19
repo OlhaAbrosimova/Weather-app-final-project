@@ -109,8 +109,10 @@ function displayTemperature(response) {
 	descriptionElement.innerHTML = response.data.weather[0].description;
 	let humidityElement = document.querySelector("#humidity");
 	humidityElement.innerHTML = response.data.main.humidity;
+
 	let windElement = document.querySelector("#wind-speed");
 	windElement.innerHTML = response.data.wind.speed.toFixed(1);
+
 	let dateElement = document.querySelector("#date");
 	dateElement.innerHTML = formatDate();
 	let iconElement = document.querySelector("#icon");
@@ -171,7 +173,6 @@ function retrievePosition(position) {
 	let units = "metric";
 	let apiUrl = `${apiEndPoint}?lat=${latitude}&lon=${longitude}&appid=${apiKey}&units=${units}`;
 
-	// axios.get(apiKey).then(handleSubmit);
 	axios.get(apiUrl).then(displayTemperature);
 }
 
@@ -186,6 +187,7 @@ currentGeo.addEventListener("click", getPosition);
 let units = "metric";
 let cityForUnits;
 let speed = document.querySelector("#wind-speed");
+
 let celsiusLink = document.querySelector("#celsius-link");
 let farenheitLink = document.querySelector("#farenheit-link");
 farenheitLink.addEventListener("click", displayFarenheitTemperature);
