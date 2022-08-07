@@ -1,26 +1,26 @@
 // function formatDate(timestamp) {
-// 	let date = new Date(timestamp);
-// 	let hours = date.getHours();
-// 	if (hours < 10) {
-// 		hours = `0${hours}`;
-// 	}
-// 	let minutes = date.getMinutes();
-// 	if (minutes < 10) {
-// 		minutes = `0${minutes}`;
-// 	}
+//  let date = new Date(timestamp);
+//  let hours = date.getHours();
+//  if (hours < 10) {
+//      hours = `0${hours}`;
+//  }
+//  let minutes = date.getMinutes();
+//  if (minutes < 10) {
+//      minutes = `0${minutes}`;
+//  }
 
-// 	let days = [
-// 		"Sunday",
-// 		"Monday",
-// 		"Tuesday",
-// 		"Wednesday",
-// 		"Thursday",
-// 		"Friday",
-// 		"Saturday",
-// 	];
-// 	let day = days[date.getDay()];
+//  let days = [
+//      "Sunday",
+//      "Monday",
+//      "Tuesday",
+//      "Wednesday",
+//      "Thursday",
+//      "Friday",
+//      "Saturday",
+//  ];
+//  let day = days[date.getDay()];
 
-// 	return `${day}, ${hours}:${minutes}`;
+//  return `${day}, ${hours}:${minutes}`;
 // }
 
 function formatDate() {
@@ -67,20 +67,26 @@ function displayForecast(response) {
 			forecastHTML =
 				forecastHTML +
 				`<div class="col-2">
-				<div class="weather-forecast-date">${formatDay(day.dt)}</div>
-			
-				<img
-					src="http://openweathermap.org/img/wn/${day.weather[0].icon}@2x.png"
-					alt=""
-					width="52"
-				/>
-				<div class="weather-forecast-temperatures">
-					<span class="weather-forecast-temp-max">${Math.round(day.temp.max)}° </span>
-					<span class="weather-forecast-temp-min">${Math.round(day.temp.min)}°</span>
-				</div>
-			</div>
-		
-	`;
+                <div class="weather-forecast-date">${formatDay(day.dt)}</div>
+            
+                <img
+                    src="http://openweathermap.org/img/wn/${
+											day.weather[0].icon
+										}@2x.png"
+                    alt=""
+                    width="52"
+                />
+                <div class="weather-forecast-temperatures">
+                    <span class="weather-forecast-temp-max">${Math.round(
+											day.temp.max
+										)}° </span>
+                    <span class="weather-forecast-temp-min">${Math.round(
+											day.temp.min
+										)}°</span>
+                </div>
+            </div>
+        
+    `;
 		}
 	});
 
@@ -100,22 +106,23 @@ function getForecast(response) {
 
 function displayTemperature(response) {
 	let cityElement = document.querySelector("#city");
-	cityElement.innerHTML = response.data.name;
-
 	let temperatureElement = document.querySelector("#base-temperature");
-	temperatureElement.innerHTML = Math.round(response.data.main.temp);
-
 	let descriptionElement = document.querySelector("#description");
-	descriptionElement.innerHTML = response.data.weather[0].description;
 	let humidityElement = document.querySelector("#humidity");
-	humidityElement.innerHTML = response.data.main.humidity;
-
 	let windElement = document.querySelector("#wind-speed");
+	let dateElement = document.querySelector("#date");
+	let iconElement = document.querySelector("#icon");
+
+	celsiusTemperature = response.data.main.temp;
+
+	cityElement.innerHTML = response.data.name;
+	temperatureElement.innerHTML = Math.round(celsiusTemperature);
+	descriptionElement.innerHTML = response.data.weather[0].description;
+	humidityElement.innerHTML = response.data.main.humidity;
+	
 	windElement.innerHTML = response.data.wind.speed.toFixed(1);
 
-	let dateElement = document.querySelector("#date");
 	dateElement.innerHTML = formatDate();
-	let iconElement = document.querySelector("#icon");
 	iconElement.setAttribute(
 		"src",
 		`http://openweathermap.org/img/wn/${response.data.weather[0].icon}@2x.png`
@@ -126,6 +133,7 @@ function displayTemperature(response) {
 	getForecast(response.data.coord);
 }
 
+//search engine
 function search(city) {
 	let apiKey = "a2e58143d5353df7726302c2856b0fb6";
 
@@ -142,12 +150,19 @@ function handleSubmit(event) {
 let form = document.querySelector("#search-form");
 form.addEventListener("submit", handleSubmit);
 
+//search engine
 function displayFarenheitTemperature(event) {
 	event.preventDefault();
+	// let temperatureElement = document.querySelector("#base-temperature");
+	// let farenheitTemperature = (celsiusTemperature * 9) / 5 + 32;
 
+	// temperatureElement.innerHTML = Math.round(farenheitTemperature);
 	celsiusLink.classList.remove(`active`);
 	farenheitLink.classList.add(`active`);
 	units = "imperial";
+
+	let windUnit = document.querySelector("#wind-unit");
+	windUnit.innerHTML = "mph";
 
 	search(cityForUnits);
 }
@@ -156,10 +171,16 @@ let celsiusTemperature = null;
 
 function displayCelsiusTemperature(event) {
 	event.preventDefault();
+	// let temperatureElement = document.querySelector("#base-temperature");
+
+	// temperatureElement.innerHTML = Math.round(celsiusTemperature);
 
 	celsiusLink.classList.add(`active`);
 	farenheitLink.classList.remove(`active`);
 	units = "metric";
+
+	let windUnit = document.querySelector("#wind-unit");
+	windUnit.innerHTML = "m/s";
 
 	search(cityForUnits);
 }
@@ -186,11 +207,10 @@ currentGeo.addEventListener("click", getPosition);
 
 let units = "metric";
 let cityForUnits;
-let speed = document.querySelector("#wind-speed");
 
 let celsiusLink = document.querySelector("#celsius-link");
+celsiusLink.addEventListener("click", displayCelsiusTemperature);
 let farenheitLink = document.querySelector("#farenheit-link");
 farenheitLink.addEventListener("click", displayFarenheitTemperature);
-celsiusLink.addEventListener("click", displayCelsiusTemperature);
 
 search("Kyiv");
